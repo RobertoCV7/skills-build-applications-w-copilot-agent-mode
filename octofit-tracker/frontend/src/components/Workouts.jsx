@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
 import { getCollection } from '../api.js'
 
+const workoutsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts/`
+  : '/api/workouts/'
+
 function Workouts() {
   const [workouts, setWorkouts] = useState([])
   const [error, setError] = useState('')
   useEffect(() => {
     const controller = new AbortController()
-    getCollection('workouts', controller.signal).then(setWorkouts).catch((e) => {
+    getCollection('workouts', controller.signal, workoutsEndpoint).then(setWorkouts).catch((e) => {
       if (e.name !== 'AbortError') setError(e.message)
     })
     return () => controller.abort()

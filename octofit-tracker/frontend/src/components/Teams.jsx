@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
 import { getCollection } from '../api.js'
 
+const teamsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams/`
+  : '/api/teams/'
+
 function Teams() {
   const [teams, setTeams] = useState([])
   const [error, setError] = useState('')
   useEffect(() => {
     const controller = new AbortController()
-    getCollection('teams', controller.signal).then(setTeams).catch((e) => {
+    getCollection('teams', controller.signal, teamsEndpoint).then(setTeams).catch((e) => {
       if (e.name !== 'AbortError') setError(e.message)
     })
     return () => controller.abort()

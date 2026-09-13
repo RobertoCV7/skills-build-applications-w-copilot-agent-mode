@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
 import { getCollection } from '../api.js'
 
+const leaderboardEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : '/api/leaderboard/'
+
 function Leaderboard() {
   const [entries, setEntries] = useState([])
   const [error, setError] = useState('')
   useEffect(() => {
     const controller = new AbortController()
-    getCollection('leaderboard', controller.signal).then(setEntries).catch((e) => {
+    getCollection('leaderboard', controller.signal, leaderboardEndpoint).then(setEntries).catch((e) => {
       if (e.name !== 'AbortError') setError(e.message)
     })
     return () => controller.abort()

@@ -24,8 +24,8 @@ export function collectionFromResponse(payload) {
   return []
 }
 
-export async function getCollection(resource, signal) {
-  const response = await fetch(apiUrl(resource), { signal })
+export async function getCollection(resource, signal, endpoint = apiUrl(resource)) {
+  const response = await fetch(endpoint, { signal })
 
   if (!response.ok) {
     throw new Error(`Unable to load ${resource} (${response.status})`)
